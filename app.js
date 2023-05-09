@@ -1,8 +1,10 @@
 const container = document.querySelector('.container');
-const search = document.querySelector('.search-box button');
+const search = document.querySelector('.search-box .search button');
 const weatherBox = document.querySelector('.weather-box');
 const weatherDetails = document.querySelector('.weather-details');
 const error404 = document.querySelector('.not-found');
+const writeLocation = document.querySelector('.write-location');
+
 
 
 search.addEventListener('click', () => {
@@ -10,8 +12,16 @@ search.addEventListener('click', () => {
     const APIKey = '18aed826f13abc2dec3c29ad383d6748';
     const city = document.querySelector('.search-box input').value;
 
-    if (city === '')
+
+    if (city === ''){
+        container.style.height = '200px';
+        weatherBox.style.display = 'none';
+        weatherDetails.style.display = 'none';
+        error404.style.display = 'none'
+        writeLocation.style.display = 'block';
+        writeLocation.classList.add('fadeIn');
         return;
+    }
 
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKey}`)
         .then(response => response.json())
@@ -20,12 +30,14 @@ search.addEventListener('click', () => {
             if (json.cod === '404') {
                 container.style.height = '400px';
                 weatherBox.style.display = 'none';
+                writeLocation.style.display = 'none';
                 weatherDetails.style.display = 'none';
                 error404.style.display = 'block';
                 error404.classList.add('fadeIn');
                 return;
             }
 
+            writeLocation.style.display = 'none';
             error404.style.display = 'none';
             error404.classList.remove('fadeIn');
 
@@ -57,7 +69,7 @@ search.addEventListener('click', () => {
                     break;
 
                 default:
-                    image.src = '';
+                    image.src = 'https://cdni.iconscout.com/illustration/premium/thumb/no-address-found-4344458-3613886.png';
             }
 
             temperature.innerHTML = `${parseInt(json.main.temp)}<span>°C</span>`;
